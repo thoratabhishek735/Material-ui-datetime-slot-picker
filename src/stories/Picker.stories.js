@@ -11,7 +11,7 @@ stories.add("App", () => {
   }
   return (
     <div>
-      {console.log(responses)}
+      {console.log("parent",responses)}
       <DateTimeSlotPicker
         responses={responses}
         onChange={(data)=>handleChange(data)}

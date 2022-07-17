@@ -40,3 +40,40 @@ export const getTimeSlots = (startTime, endTime, duration) => {
   }
   return slotArray;
 };
+
+export const sanitizeDateTimePayload = responses => {
+  const responsesData = [...responses].map(element => ({
+    ...element,
+    times: [
+      ...element.times.map(time => {
+        let ns = convertFormattedStringToDate(element.date).setHours(
+          time.split(":")[0]
+        );
+        ns = new Date(ns).setMinutes(time.split(":")[1]);
+
+        return new Date(ns);
+      }),
+    ],
+  }));
+
+  return responsesData;
+};
+
+export const parseDateTimePayload = responses => {
+  
+
+  const responsesData = [...responses].map(element => ({
+    ...element,
+    date:element.date,
+    times: [
+      ...element.times.map(time => {
+        let ns = new Date(time).getHours() + ":" + new Date(time).getMinutes();
+        ns = getCurrentTime(ns);
+        ns = getGlobalTime(ns);
+        return ns;
+      }),
+    ],
+  }));
+
+  return responsesData;
+};

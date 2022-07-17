@@ -10,6 +10,8 @@ import TimePicker from "./TimePicker";
 import {
   convertFormattedStringToDate,
   getFormattedDate,
+  sanitizeDateTimePayload,
+  parseDateTimePayload
 } from "../../utils/date";
 import { ThemeProvider, useTheme } from "@mui/material";
 
@@ -29,7 +31,8 @@ export default function DateTimeSlotPicker({
   const theme = customTheme || useTheme();
 
   const sendToParent =(responses)=>{
-    onChange(responses)
+    // const sanitizedData = sanitizeDateTimePayload(responses)
+    onChange(responses);
   }
 
   const findDate = (dates, date) => {
@@ -93,18 +96,19 @@ export default function DateTimeSlotPicker({
   };
 
   React.useEffect(() => {
+    const values = responses;
     if (!selectedDate) {
-      if (!responses.length) {
+      if (!values.length) {
         setTimes([]);
       } else {
-        setSelectedDate(convertFormattedStringToDate(responses[0].date));
-        setTimes(responses[0].times);
+        setSelectedDate(convertFormattedStringToDate(values[0].date));
+        setTimes(values[0].times);
       }
     } else {
-      if (!responses.length) {
+      if (!values.length) {
         setTimes([]);
       } else {
-        let responsesData = [...responses];
+        let responsesData = [...values];
         const index = responsesData.findIndex(
           (item) => item.date === getFormattedDate(selectedDate, "YYYY-MM-DD")
         );
@@ -116,6 +120,7 @@ export default function DateTimeSlotPicker({
         }
       }
     }
+    
   }, [responses]);
 
   return (
@@ -130,10 +135,9 @@ export default function DateTimeSlotPicker({
               )}
               onChange={(newValue) => {
                 const date = startOfDay(newValue);
-                console.log("oo")
+        
                 //  Select date only if its greater that todays date
                 if (dateEnabled(date)) {
-                  console.log("first")
                   setSelectedDate(date);
                   handleResponseUpdates(getFormattedDate(date, "YYYY-MM-DD"));
                 }

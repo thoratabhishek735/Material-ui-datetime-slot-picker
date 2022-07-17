@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { TIME_ARRAY } from "../../constants/time";
-import { getCurrentDate, getFormattedDate, getCharDay } from "../../utils/date";
+
+import { getCurrentDate, getFormattedDate, getCharDay,getTimeSlots } from "../../utils/date";
 
 
 export default function TimePicker({
@@ -10,7 +10,10 @@ export default function TimePicker({
   handleTimesUpdate,
   minTimeSlots,
   maxTimeSlots,
-  theme
+  theme,
+  startTime,
+  endTime,
+  duration
 }) {
   const isSelected = item => {
     return times.some(time => item.value === time);
@@ -44,7 +47,7 @@ export default function TimePicker({
         gap={1}
         sx={{ maxHeight: "300px", overflow: "auto" }}
       >
-        {TIME_ARRAY.map(item => (
+        {getTimeSlots(startTime,endTime,duration).map(item => (
           <Button
             variant="outlined"
             sx={{

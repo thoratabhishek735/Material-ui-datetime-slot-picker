@@ -15,15 +15,22 @@ import { ThemeProvider, useTheme } from "@mui/material";
 
 export default function DateTimeSlotPicker({
   responses,
-  setResponses,
+  onChange,
   minTimeSlots,
   maxTimeSlots,
   containerStyles,
   customTheme,
+  startTime,
+  endTime,
+  slotDuration
 }) {
   const [times, setTimes] = React.useState([]);
   const [selectedDate, setSelectedDate] = React.useState(null);
   const theme = customTheme || useTheme();
+
+  const sendToParent =(responses)=>{
+    onChange(responses)
+  }
 
   const findDate = (dates, date) => {
     const dateTime = date.getTime();
@@ -58,9 +65,10 @@ export default function DateTimeSlotPicker({
         responsesData.splice(responseIndex, 1);
       }
     } else {
+      responsesData.push({date:date,times:[]})
       setTimes([]);
     }
-    setResponses(responsesData);
+    sendToParent(responsesData)
   };
 
   const handleTimesUpdate = (currentDate, newTimes) => {
@@ -81,7 +89,7 @@ export default function DateTimeSlotPicker({
       responsesData.push({ date: currentDate, times: [...newTimes] });
       setTimes([...newTimes]);
     }
-    setResponses(responsesData);
+    sendToParent(responsesData)
   };
 
   React.useEffect(() => {
@@ -122,10 +130,11 @@ export default function DateTimeSlotPicker({
               )}
               onChange={(newValue) => {
                 const date = startOfDay(newValue);
+                console.log("oo")
                 //  Select date only if its greater that todays date
                 if (dateEnabled(date)) {
+                  console.log("first")
                   setSelectedDate(date);
-
                   handleResponseUpdates(getFormattedDate(date, "YYYY-MM-DD"));
                 }
               }}
@@ -145,6 +154,9 @@ export default function DateTimeSlotPicker({
                 minTimeSlots={minTimeSlots}
                 maxTimeSlots={maxTimeSlots}
                 theme={theme}
+                startTime={startTime}
+                endTime={endTime}
+                duration={slotDuration}
               />
             )}
           </Box>

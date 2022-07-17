@@ -6,16 +6,23 @@ const stories = storiesOf("AppTest", module);
 
 stories.add("App", () => {
   const [responses, setResponses] = useState([]);
+  const handleChange=(data)=>{
+    setResponses(data)
+  }
   return (
     <div>
+      {console.log(responses)}
       <DateTimeSlotPicker
         responses={responses}
-        setResponses={setResponses}
+        onChange={(data)=>handleChange(data)}
         minTimeSlots={0}
         maxTimeSlots={5}
         containerStyles={{borderRadius:"2px"}}
+        startTime={"08:00"}
+        endTime={"23:00"}
+        slotDuration={30}
       />
-      
+
     </div>
   );
 });
